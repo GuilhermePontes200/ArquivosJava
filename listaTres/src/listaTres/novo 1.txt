@@ -1,0 +1,108 @@
+import java.io.*;
+import java.util.*;
+
+class Node {
+    //=========Atributos=========
+    private int dado;
+    private Node proximo;
+    //=========Construtores======
+    public Node(){
+        dado    = 0;
+        proximo = null;
+    }
+    //---------------------------
+    public Node(int d){
+        dado    = d;
+        proximo = null;
+    }
+    //=====Getters e Setters=====
+    public int getDado(){
+        return(dado);
+    }
+    //---------------------------
+    public void setDado(int d){
+        dado = d;
+    }
+    //---------------------------
+    public No getProximoNo(){
+        return(proximo);
+    }
+    //---------------------------
+    public void setProximoNo(No no){
+        proximo = no;
+    }
+}
+//=========================================================
+class Queue {
+    //========Atributos==============
+    private No topo;
+    //========Construtores===========
+    public Queue(){
+        topo = null;
+    }
+    //========Metodos================
+    public void enqueue(int n){
+        No novoNo = new No(n);
+        if(this.topo==null){
+            this.topo = novoNo;
+            return;
+        }
+        No noAtual = this.topo;
+        while(noAtual.getProximoNo()!=null) noAtual = noAtual.getProximoNo();
+        noAtual.setProximoNo(novoNo);
+    }
+    //-------------------------------
+    public int dequeue(){
+        if(this.topo==null) return(-1);
+        int dado = this.topo.getDado();
+        this.topo = this.topo.getProximoNo();
+        return(dado);
+    }
+    //-------------------------------
+    public int head(){
+        if(this.topo==null) return(-1);
+        return(this.topo.getDado());
+    }
+    //-------------------------------
+    public boolean isEmpty(){
+        if(this.topo==null) return(true); else return(false);
+    }
+    //-------------------------------
+    public void receberString(String entrada) {
+       for (String valoresStr: entrada.split(";")) this.enqueue(Integer.parseInt(valoresStr));
+    }
+}
+//========================================================================================================
+public class Result{
+    public int trocas(Queue fila){
+        int contadorTrocas = 0;
+        if(fila.isEmpty()) return(contadorTrocas);
+        int dadoForaFila = fila.dequeue();
+        while(!fila.isEmpty()){
+            dadoComparacao = fila.head();
+            if(dadoForaFila<dadoComparacao){
+                fila.dequeue();
+                ++contadorTrocas;
+            } else{
+                dadoForaFila = fila.dequeue();
+            }
+        }
+    }
+    
+}
+//========================================================================================================
+public class Solution {
+
+    public static void main(String[] args) throws IOException{
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+
+        String entrada = bufferedReader.readLine();
+        Queue fila = new Queue();
+        fila.receberString(entrada);
+        Result result = new Result();
+        bufferedWriter.write(String.valueOf(result.trocas(fila)));
+//note que, a funcao trocas deve retornar um Integer, porem por um bug do hackerranks eh necessario transformalo em uma String
+        bufferedReader.close();
+        bufferedWriter.close();
+}
